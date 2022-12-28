@@ -48,12 +48,24 @@ def grab_token(credentials):
     return headers_with_token
 
 
+# Дістає тему і тіло листа, працюватиме корректно тільки якщо лист надходить 1
+def take_messages(headers_token):
+    r = requests.get(base_url + "messages", headers=headers_token)
+    print(r.status_code)
+    messages = r.json().get('hydra:member')
+    subject = messages[0].get('subject')
+    intro = messages[0].get('intro')
+    print("Subject: ", subject)
+    print("Intro: ", intro)
+
+
 # Основна функція
 def main():
     print("WOrk")
-    name = create_random_name()
-    mail_data = create_mail(name)
-    headers_with_token = grab_token(mail_data)
+    # name = create_random_name()
+    # mail_data = create_mail(name)
+    # headers_with_token = grab_token(mail_data)
+    take_messages()
 
 
 
