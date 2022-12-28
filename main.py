@@ -15,7 +15,7 @@ def create_random_name():
     mail_name = ''
     for i in range(12):
         mail_name += ''.join(secrets.choice(symbols))
-    return mail_name + "@triots.com"
+    return mail_name.lower() + "@triots.com"
 
 
 def create_mail(name):
@@ -27,19 +27,34 @@ def create_mail(name):
     time.sleep(2)
     print(r.status_code)
     response = r.json()
-    # поки просто виводить респонс з назвою створеного мейла
-    print(response)
+    print("MAIL CREATED: ", response)
+    return payload
 
-# Тут буде запит для тогог щоб взяти токен
-def grab_token():
-    return "token"
+
+# Беремо токен, формуємо новий худурс вже з авторизацією
+def grab_token(credentials):
+    payload = credentials
+    print("CREDENTIALS: ", payload)
+    r = requests.post(base_url + "token", headers=headers, data=json.dumps(payload))
+    time.sleep(2)
+    print(r.status_code)
+    response = r.json()
+    token = response.get('token')
+    headers_with_token = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {token}",
+    }
+    print("New HEADER: ", headers_with_token)
+    return headers_with_token
 
 
 # Основна функція
 def main():
     print("WOrk")
     name = create_random_name()
-    create_mail(name)
+    mail_data = create_mail(name)
+    headers_with_token = grab_token(mail_data)
+
 
 
 if __name__ == "__main__":
