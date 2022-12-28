@@ -17,7 +17,7 @@ def create_random_name():
         mail_name += ''.join(secrets.choice(symbols))
     return mail_name.lower() + "@triots.com"
 
-
+# Створює пошту з рандомною назвою
 def create_mail(name):
     payload = {
         "address": name,
@@ -31,7 +31,7 @@ def create_mail(name):
     return payload
 
 
-# Беремо токен, формуємо новий худурс вже з авторизацією
+# Беремо токен, формуємо новий хедерс вже з авторизацією
 def grab_token(credentials):
     payload = credentials
     print("CREDENTIALS: ", payload)
@@ -48,7 +48,9 @@ def grab_token(credentials):
     return headers_with_token
 
 
+
 # Дістає тему і тіло листа, працюватиме корректно тільки якщо лист надходить 1
+# Повинно викликатись після того як лист прийде!!!
 def take_messages(headers_token):
     r = requests.get(base_url + "messages", headers=headers_token)
     print(r.status_code)
@@ -62,10 +64,11 @@ def take_messages(headers_token):
 # Основна функція
 def main():
     print("WOrk")
-    # name = create_random_name()
-    # mail_data = create_mail(name)
-    # headers_with_token = grab_token(mail_data)
-    take_messages()
+    name = create_random_name()
+    mail_data = create_mail(name)
+    headers_with_token = grab_token(mail_data)
+    # ТУТ ПОВИНЕН БУТИ СКРИПТ ЯКИЙ ПРИЗВОДИТЬ ДО НАДХОДЖЕННЯ ЛИСТА НА ПОШТУ, АБО СЛІП НА ПРОМІЖОК ЧАСУ, ЩО ПОТРІБНИЙ НА НАДХОДЖЕННЯ ЛИСТА
+    # take_messages(headers_with_token)
 
 
 
